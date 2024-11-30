@@ -9,8 +9,7 @@
 
 Soal Modul 4 : https://avalon-ai.org/m/SoalModul5
 
-Spredsheet Pembagian Rute dan IP : 
-https://docs.google.com/spreadsheets/d/1FLiP9vwMkF5esHdDuj6ZUUPIpaq22PxNjC83FYp0OyE/edit?usp=sharing
+[Spreadsheets Pembagian Rute dan IP](https://intip.in/SPSIT23Modul5) 
 
 Topologi : 
 ![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/topologi-fiks.png)
