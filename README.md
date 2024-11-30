@@ -9,3 +9,7 @@
 
 Soal Modul 4 : https://avalon-ai.org/m/SoalModul5
 
+Spredsheet Pembagian Rute dan IP : 
+https://docs.google.com/spreadsheets/d/1FLiP9vwMkF5esHdDuj6ZUUPIpaq22PxNjC83FYp0OyE/edit?usp=sharing
+
+Topologi : 
