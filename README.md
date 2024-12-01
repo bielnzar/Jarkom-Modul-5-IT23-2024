@@ -170,7 +170,8 @@ iface eth0 inet static
 
 ##  Misi 1 (No. 2)
 
-## Pohon Subnet : 
+### VLSM - Tree : 
+![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/VLSM-Tree.png)
 
 
 ## Misi 1 (No. 3)
