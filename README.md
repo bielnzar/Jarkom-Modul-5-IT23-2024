@@ -425,6 +425,8 @@ iptables -A INPUT -m recent --name blacklist --rcheck -j DROP
 iptables -A OUTPUT -m recent --name blacklist --rcheck -j DROP
 ```
 
+![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/port-scan.jpg)
+
 ## Misi 2 (No. 7)
 ```
 iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --set
