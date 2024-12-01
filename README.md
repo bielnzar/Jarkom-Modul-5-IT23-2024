@@ -272,8 +272,6 @@ up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
 ![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m1-s2_2.png)
 
-## Misi 2 (No. 1)
-
 ### NewEridu terhubung ke internet menggunakan iptables tanpa MASQUERADE
 ```
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source [IP eth0]
@@ -284,3 +282,165 @@ iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source [IP eth0]
 ![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m2-s1_1.png)
 
 ![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m2-s1_2.png)
+
+## DHCP Stuff
+
+### DHCP Server Stuff
+```
+apt-get update
+apt-get install isc-dhcp-server
+```
+DHCPserver.sh
+```
+echo '
+INTERFACESv4="eth0"
+INTERFACESv6=""
+' > /etc/default/isc-dhcp-server
+
+echo '
+subnet 10.75.0.0 netmask 255.255.255.0 {
+  range 10.75.0.2 10.75.0.254;
+  option routers 10.75.0.1;
+  option broadcast-address 10.75.0.255;
+  option domain-name-servers 10.75.1.203;
+}
+
+subnet 10.75.1.0 netmask 255.255.255.128 {
+  range 10.75.1.2 10.75.1.126;
+  option routers 10.75.1.1;
+  option broadcast-address 10.75.1.127;
+  option domain-name-servers 10.75.1.203;
+}
+
+subnet 10.75.1.128 netmask 255.255.255.192 {
+  range 10.75.1.130 10.75.1.190;
+  option routers 10.75.1.129;
+  option broadcast-address 10.75.1.191;
+  option domain-name-servers 10.75.1.203;
+}
+subnet 10.75.1.200 netmask 255.255.255.248{
+  range 10.75.1.202 10.75.1.206;
+  option routers 10.75.1.201;
+  option broadcast-address 10.75.1.207;
+  option domain-name-servers 10.75.1.203;
+}
+' > /etc/dhcp/dhcpd.conf
+
+service isc-dhcp-server restart
+```
+
+### DHCP relay stuff
+```
+apt
+```
+DHCPrelay.sh
+```
+echo '
+SERVERS="10.75.1.202"
+INTERFACES="eth0 eth1 eth2 eth3"
+OPTIONS=""
+' > /etc/default/isc-dhcp-relay
+
+echo '
+net.ipv4.ip_forward=1
+' > /etc/sysctl.conf
+
+service isc-dhcp-relay restart
+```
+### DNS stuff
+```
+apt
+```
+DNS.sh
+```
+echo 'options {
+    directory "/var/cache/bind";
+
+    forwarders {
+        192.168.122.1;
+    };
+
+    // dnssec-validation auto;
+
+    allow-query { any; };
+    auth-nxdomain no;    # conform to RFC1035
+    listen-on-v6 { any; };
+};' > /etc/bind/named.conf.options
+
+service bind9 restart
+```
+
+## Misi 2 (No. 2)
+```sh
+iptables -A INPUT -p icmp --icmp-type echo-request -j REJECT
+iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+```
+
+## Misi 2 (No. 3)
+```sh
+iptables -A INPUT -j REJECT
+iptables -A INPUT -s <ipfairy> -j ACCEPT
+```
+
+## Misi 2 (No. 4)
+Hollow
+```sh
+iptables -A INPUT -j REJECT
+iptables -A INPUT -s <ipburnice> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -s <ipcaesar> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -s <ipjane> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+iptables -A INPUT -s <ippoliceboo> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
+```
+
+## Misi 2 (No. 5)
+HIA
+```sh
+iptables -A INPUT -p tcp -s <IP Ellen> --dport 80 -m time --timestart 01:00 --timestop 14:00 -j ACCEPT
+iptables -A INPUT -p tcp -s <IP Lycaon> --dport 80 -m time --timestart 01:00 --timestop 14:00 -j ACCEPT
+
+iptables -A INPUT -p tcp -s <IP Jane> --dport 80 -m time --timestart 20:00 --timestop 16:00  -j ACCEPT
+iptables -A INPUT -p tcp -s <IP Policeboo> --dport 80 -m time --timestart 20:00 --timestop 16:00 -j ACCEPT
+
+iptables -A INPUT -p tcp --dport 80 -j REJECT # reject other requests
+```
+
+## Misi 2 (No. 6)
+```sh
+# Create a chain for handling detected scans
+iptables -N PORTSCAN
+
+# Rate-limit all new connections: Allow max 25 connections in 10 seconds
+iptables -A INPUT -m conntrack --ctstate NEW \
+  -m recent --set --name portscan
+iptables -A INPUT -m conntrack --ctstate NEW \
+  -m recent --update --seconds 10 --hitcount 25 --name portscan -j PORTSCAN
+
+# Handle scanning activity
+iptables -A PORTSCAN -m recent --set --name blacklist
+iptables -A PORTSCAN -j LOG --log-prefix 'PORT SCAN DETECTED ' --log-level 4
+iptables -A PORTSCAN -j DROP
+
+# Block all traffic from blacklisted IPs
+iptables -A INPUT -m recent --name blacklist --rcheck -j DROP
+iptables -A OUTPUT -m recent --name blacklist --rcheck -j DROP
+```
+
+## Misi 2 (No. 7)
+```
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --set
+iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 3 -j REJECT
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+```
+
+## Misi 2 (No. 8)
+```
+iptables -t nat -A PREROUTING -p tcp -j DNAT --to-destination 10.75.1.226 --dport 8080
+iptables -A FORWARD -p tcp -d 10.75.1.226 -j ACCEPT
+```
+
+## Misi 3 (No. 1)
+```
+iptables --policy INPUT DROP
+iptables --policy OUTPUT DROP
+iptables --policy FORWARD DROP
+```
