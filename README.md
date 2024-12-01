@@ -277,3 +277,9 @@ up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source [IP eth0]
 ```
+
+> NewEridu sudah terhubung ke internet, begitu juga subnet yg terhubung dengannya.
+
+![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m2-s1_1.png)
+
+![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m2-s1_2.png)
