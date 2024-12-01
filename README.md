@@ -265,6 +265,11 @@ echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 echo 'nameserver 192.168.122.1' > /etc/resolv.conf
 ```
 
+> Semua node sudah terhubung satu sama lain, bisa melakukan ping untuk mengetes antar koneksi node.
+
+![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m1-s2_1.png)
+
+![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/m1-s2_2.png)
 
 ## Misi 2 (No. 1)
 
