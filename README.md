@@ -197,7 +197,7 @@ post-up route add -net 10.75.1.128 netmask 255.255.255.192 gw 10.75.1.217
 
 post-up route add -net 10.75.1.200 netmask 255.255.255.248 gw 10.75.1.217
 
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### Ballet Twins
@@ -210,7 +210,7 @@ post-up route add -net 10.75.1.128 netmask 255.255.255.192 gw 10.75.1.193
 
 post-up route add -net 10.75.1.200 netmask 255.255.255.248 gw 10.75.1.193
 
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### Six Street
@@ -223,7 +223,7 @@ post-up route add -net 10.75.1.192 netmask 255.255.255.248 gw 10.75.1.221
 post-up route add -net 10.75.0.0 netmask 255.255.255.0 gw 10.75.1.221
 post-up route add -net 10.75.1.0 netmask 255.255.255.128 gw 10.75.1.221
 
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### Scout Outpost
@@ -235,7 +235,7 @@ post-up route add -net 10.75.0.0 netmask 255.255.255.0 gw 10.75.1.209
 
 post-up route add -net 10.75.1.128 netmask 255.255.255.192 gw 10.75.1.211
 
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### Outer Ring
@@ -247,22 +247,22 @@ post-up route add -net 10.75.0.0 netmask 255.255.255.0 gw 10.75.1.209
 
 post-up route add -net 10.75.1.224 netmask 255.255.255.252 gw 10.75.1.210
 
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### Fairy (DHCP Server)
 ```
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### HDD (DNS Server)
 ```
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 ### HIA & HollowZero (Apache Worker)
 ```
-echo 'nameserver 192.168.122.1' > /etc/resolv.conf
+up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
 > Semua node sudah terhubung satu sama lain, bisa melakukan ping untuk mengetes antar koneksi node.
