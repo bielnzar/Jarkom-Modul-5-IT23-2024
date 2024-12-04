@@ -208,7 +208,7 @@ post-up route add -net 10.75.1.200 netmask 255.255.255.248 gw 10.75.1.193
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
-### Six Street (DHCP Relay)
+### Six Street
 ```
 post-up route add -net 10.75.1.224 netmask 255.255.255.252 gw 10.75.1.210
 
