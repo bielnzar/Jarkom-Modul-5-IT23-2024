@@ -1,11 +1,9 @@
 # Jarkom-Modul-5-IT23-2024
 
-
 | Nama | NRP |
 | :--: | :--: |
 | Daffa Rajendra Priyatama | 5027231009 |
 | Nabiel Nizar Anwari | 5027231087 |
-
 
 Soal Modul 5 : https://avalon-ai.org/m/SoalModul5
 
@@ -46,10 +44,6 @@ auto eth2
 iface eth2 inet static
 	address 10.75.1.221
 	netmask 255.255.255.252
-
-## Otomasi iptables awal
-# IP_ETH0=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-# iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $IP_ETH0
 ```
 
 ### LuminaSquare
@@ -188,7 +182,7 @@ post-up route add -net 10.75.1.192 netmask 255.255.255.248 gw 10.75.1.218
 post-up route add -net 10.75.1.0 netmask 255.255.255.128 gw 10.75.1.218
 ```
 
-### LuminaSquare
+### LuminaSquare (DHCP Relay)
 ```
 post-up route add -net 10.75.1.0 netmask 255.255.255.128 gw 10.75.1.194
 
@@ -201,7 +195,7 @@ post-up route add -net 10.75.1.200 netmask 255.255.255.248 gw 10.75.1.217
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
-### Ballet Twins
+### Ballet Twins (DHCP Relay)
 ```
 post-up route add -net 10.75.0.0 netmask 255.255.255.0 gw 10.75.1.193
 
@@ -214,7 +208,7 @@ post-up route add -net 10.75.1.200 netmask 255.255.255.248 gw 10.75.1.193
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
-### Six Street
+### Six Street (DHCP Relay)
 ```
 post-up route add -net 10.75.1.224 netmask 255.255.255.252 gw 10.75.1.210
 
@@ -239,7 +233,7 @@ post-up route add -net 10.75.1.128 netmask 255.255.255.192 gw 10.75.1.211
 up echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 
-### Outer Ring
+### Outer Ring (DHCP Relay)
 ```
 post-up route add -net 10.75.1.200 netmask 255.255.255.248 gw 10.75.1.209
 post-up route add -net 10.75.1.192 netmask 255.255.255.248 gw 10.75.1.209
@@ -331,7 +325,8 @@ service isc-dhcp-server restart
 
 ### DHCP relay stuff
 ```
-apt
+apt-get update
+apt install isc-dhcp-relay -y
 ```
 DHCPrelay.sh
 ```
@@ -349,7 +344,8 @@ service isc-dhcp-relay restart
 ```
 ### DNS stuff
 ```
-apt
+apt-get update
+apt-get install bind9 netcat -y
 ```
 DNS.sh
 ```
@@ -369,21 +365,47 @@ echo 'options {
 
 service bind9 restart
 ```
+### Apache Worker stuff
+```
+apt-get update
+apt-get install apache2 netcat -y
+```
+Apache2.sh
+```
+service apache2 start
+
+echo 'Welcome to {hostname}' > /var/www/html/index.html
+
+service apache2 restart
+```
+
+## Misi 2 (No.1)
+New Eridu
+```
+IP_ETH0=$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source $IP_ETH0
+```
 
 ## Misi 2 (No. 2)
+Fairy
 ```sh
 iptables -A INPUT -p icmp --icmp-type echo-request -j REJECT
 iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
 ```
+Testing: `ping`
 
 ## Misi 2 (No. 3)
+HDD
 ```sh
 iptables -A INPUT -j REJECT
 iptables -A INPUT -s <ipfairy> -j ACCEPT
 ```
+Testing:
+- `nc 10.75.1.203 8080` - Fairy
+- `nc -l -p 8080` - HDD
 
 ## Misi 2 (No. 4)
-Hollow
+HollowZero
 ```sh
 iptables -A INPUT -j REJECT
 iptables -A INPUT -s <ipburnice> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
@@ -391,6 +413,7 @@ iptables -A INPUT -s <ipcaesar> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
 iptables -A INPUT -s <ipjane> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
 iptables -A INPUT -s <ippoliceboo> -m time --weekdays Mon,Tue,Wed,Thu,Fri -j ACCEPT
 ```
+Testing: `curl http://10.75.1.226`
 
 ## Misi 2 (No. 5)
 HIA
@@ -403,8 +426,10 @@ iptables -A INPUT -p tcp -s <IP Policeboo> --dport 80 -m time --timestart 20:00 
 
 iptables -A INPUT -p tcp --dport 80 -j REJECT # reject other requests
 ```
+Testing: `curl 10.75.1.195` (harus di UTC time)
 
 ## Misi 2 (No. 6)
+HIA
 ```sh
 # Create a chain for handling detected scans
 iptables -N PORTSCAN
@@ -425,9 +450,12 @@ iptables -A INPUT -m recent --name blacklist --rcheck -j DROP
 iptables -A OUTPUT -m recent --name blacklist --rcheck -j DROP
 ```
 
+Testing: `nmap -p 1-100 10.75.1.195`, ping, curl, nc
+
 ![github-small](https://github.com/bielnzar/Jarkom-Modul-5-IT23-2024/blob/main/assets/images/port-scan.jpg)
 
 ## Misi 2 (No. 7)
+HollowZero
 ```
 iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --set
 iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 3 -j REJECT
@@ -435,12 +463,14 @@ iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 ```
 
 ## Misi 2 (No. 8)
+Burnice
 ```
 iptables -t nat -A PREROUTING -p tcp -j DNAT --to-destination 10.75.1.226 --dport 8080
 iptables -A FORWARD -p tcp -d 10.75.1.226 -j ACCEPT
 ```
 
 ## Misi 3 (No. 1)
+Burnice
 ```
 iptables --policy INPUT DROP
 iptables --policy OUTPUT DROP
