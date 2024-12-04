@@ -461,6 +461,7 @@ iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --set
 iptables -A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m recent --update --seconds 1 --hitcount 3 -j REJECT
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 ```
+Test dengan 4 node secara bersamaan dengan: `parallel curl -s http://IP-HollowZero ::: IP-Caesar IP-Burnice IP-Jane IP-Policeboo`
 
 ## Misi 2 (No. 8)
 Burnice
